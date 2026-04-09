@@ -68,3 +68,8 @@ logs/
 
 # README
 README.md
+
+#Image files
+*.png
+*.jpg
+*.jpeg
