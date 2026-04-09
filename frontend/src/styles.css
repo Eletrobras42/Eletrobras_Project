@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    @apply bg-dark-bg text-white;
+  }
+
+  body {
+    @apply bg-dark-bg text-white;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-dark-card border border-dark-border rounded-xl p-6 shadow-xl;
+  }
+
+  .kpi-card {
+    @apply card hover:shadow-2xl transition-shadow duration-300;
+  }
+
+  .kpi-value {
+    @apply text-3xl font-bold text-accent-blue mb-2;
+  }
+
+  .kpi-label {
+    @apply text-sm text-gray-400 uppercase tracking-wide;
+  }
+
+  .chart-container {
+    @apply bg-dark-card border border-dark-border rounded-xl p-6;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-accent-blue to-accent-purple hover:from-accent-blue/80 hover:to-accent-purple/80 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-600 hover:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-300 mb-2;
+  }
+
+  .table-container {
+    @apply bg-dark-card border border-dark-border rounded-xl overflow-hidden;
+  }
+
+  .table-header {
+    @apply bg-dark-bg px-6 py-4 border-b border-dark-border;
+  }
+
+  .table-body {
+    @apply divide-y divide-dark-border;
+  }
+
+  .table-row {
+    @apply hover:bg-dark-bg/50 transition-colors duration-200;
+  }
+
+  .table-cell {
+    @apply px-6 py-4 text-sm text-gray-300;
+  }
+
+  .tab-button {
+    @apply px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200;
+  }
+
+  .tab-active {
+    @apply bg-accent-blue text-white;
+  }
+
+  .tab-inactive {
+    @apply text-gray-400 hover:text-white hover:bg-dark-bg;
+  }
+}
