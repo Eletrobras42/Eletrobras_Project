@@ -6,38 +6,26 @@ function AnomaliesTable({ data }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-dark-border">
-              <th className="text-left py-3 px-4 text-gray-400">Máquina</th>
-              <th className="text-left py-3 px-4 text-gray-400">Tempo</th>
-              <th className="text-left py-3 px-4 text-gray-400">Consumo Estimado</th>
-              <th className="text-left py-3 px-4 text-gray-400">Erro %</th>
-              <th className="text-left py-3 px-4 text-gray-400">Fora Tolerância</th>
-              <th className="text-left py-3 px-4 text-gray-400">Anomalia</th>
+              <th className="text-left py-3 px-4 text-gray-400">Série</th>
+              <th className="text-left py-3 px-4 text-gray-400">Ano</th>
+              <th className="text-left py-3 px-4 text-gray-400">Valor Observado</th>
+              <th className="text-left py-3 px-4 text-gray-400">Valor Esperado</th>
+              <th className="text-left py-3 px-4 text-gray-400">Tipo</th>
+              <th className="text-left py-3 px-4 text-gray-400">Severidade</th>
               <th className="text-left py-3 px-4 text-gray-400">Data</th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index} className="border-b border-dark-border hover:bg-dark-bg">
-                <td className="py-3 px-4">{item.machine_name}</td>
-                <td className="py-3 px-4">{item.timestamp_min} min</td>
-                <td className="py-3 px-4">{item.predicted_consumo_kwh?.toFixed(2)} kWh</td>
-                <td className="py-3 px-4">{item.erro_percentual?.toFixed(2)}%</td>
+                <td className="py-3 px-4">{item.series_key}</td>
+                <td className="py-3 px-4">{item.anomaly_year || '-'}</td>
+                <td className="py-3 px-4">{item.observed_value ?? '-'}</td>
+                <td className="py-3 px-4">{item.expected_value ?? '-'}</td>
+                <td className="py-3 px-4">{item.anomaly_type || '-'}</td>
+                <td className="py-3 px-4">{item.severity || 'N/A'}</td>
                 <td className="py-3 px-4">
-                  <span className={`px-2 py-1 rounded text-xs ${
-                    item.fora_tolerancia ? 'bg-accent-red text-white' : 'bg-accent-green text-white'
-                  }`}>
-                    {item.fora_tolerancia ? 'Sim' : 'Não'}
-                  </span>
-                </td>
-                <td className="py-3 px-4">
-                  <span className={`px-2 py-1 rounded text-xs ${
-                    item.anomalia ? 'bg-accent-orange text-white' : 'bg-accent-green text-white'
-                  }`}>
-                    {item.anomalia ? 'Sim' : 'Não'}
-                  </span>
-                </td>
-                <td className="py-3 px-4">
-                  {new Date(item.created_at).toLocaleDateString('pt-BR')}
+                  {item.anomaly_date ? new Date(item.anomaly_date).toLocaleDateString('pt-BR') : '-'}
                 </td>
               </tr>
             ))}

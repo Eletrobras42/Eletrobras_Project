@@ -1,6 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-function TimelineChart({ data, title, dataKey, color = "#3b82f6" }) {
+function TimelineChart({ data, title, dataKey, xDataKey = 'month', color = '#3b82f6' }) {
   return (
     <div className="chart-container">
       <h3 className="text-lg font-semibold mb-4 text-white">{title}</h3>
@@ -8,7 +8,7 @@ function TimelineChart({ data, title, dataKey, color = "#3b82f6" }) {
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
           <XAxis
-            dataKey="month"
+            dataKey={xDataKey}
             stroke="#94a3b8"
             fontSize={12}
           />

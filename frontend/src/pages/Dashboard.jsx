@@ -2,15 +2,13 @@ import { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, AlertTriangle, Activity } from 'lucide-react';
 import KPICard from '../components/KPICard.jsx';
 import TimelineChart from '../components/TimelineChart.jsx';
-import MachineDistributionChart from '../components/MachineDistributionChart.jsx';
 import AnomaliesTable from '../components/AnomaliesTable.jsx';
-import { getDashboardOverview, getTimelineData, getPredictions, getMachines } from '../services/dashboardApi.js';
+import { getDashboardOverview, getDashboardTrends, getDashboardAnomalies } from '../services/dashboardApi.js';
 
 function Dashboard() {
   const [overview, setOverview] = useState(null);
-  const [timeline, setTimeline] = useState([]);
-  const [predictions, setPredictions] = useState([]);
-  const [machines, setMachines] = useState([]);
+  const [trends, setTrends] = useState([]);
+  const [anomalies, setAnomalies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -22,17 +20,15 @@ function Dashboard() {
   async function loadDashboardData() {
     try {
       setLoading(true);
-      const [overviewData, timelineData, predictionsData, machinesData] = await Promise.all([
+      const [overviewData, trendsData, anomaliesData] = await Promise.all([
         getDashboardOverview(),
-        getTimelineData(),
-        getPredictions(),
-        getMachines()
+        getDashboardTrends(),
+        getDashboardAnomalies(),
       ]);
 
       setOverview(overviewData);
-      setTimeline(timelineData);
-      setPredictions(predictionsData);
-      setMachines(machinesData);
+      setTrends(trendsData);
+      setAnomalies(anomaliesData);
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
       console.error(err);
@@ -70,12 +66,19 @@ function Dashboard() {
   }
 
   // Preparar dados para os gráficos
-  const machineDistribution = machines.map(machine => ({
-    name: machine.machine_name,
-    value: machine.record_count
-  }));
+  const chartData = trends.reduce((acc, item) => {
+    const year = item.observation_year;
+    const existing = acc.find((row) => row.year === year);
 
-  const anomaliesData = predictions.filter(p => p.anomalia).slice(0, 10);
+    if (existing) {
+      existing[item.series_key] = item.numeric_value;
+      return acc;
+    }
+
+    return [...acc, { year, [item.series_key]: item.numeric_value }];
+  }, []);
+
+  const anomaliesData = anomalies.slice(0, 10);
 
   const tabs = [
     { id: 'overview', label: 'Visão Executiva', icon: BarChart3 },
@@ -123,26 +126,26 @@ function Dashboard() {
             {/* KPIs */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <KPICard
-                title="Máquinas Monitoradas"
-                value={overview.machine_count}
+                title="Documentos Catalogados"
+                value={overview.documents_cataloged}
                 icon={Activity}
                 color="blue"
               />
               <KPICard
-                title="Total de Registros"
-                value={overview.record_count}
+                title="Indicadores Extraídos"
+                value={overview.indicators_extracted}
                 icon={BarChart3}
                 color="purple"
               />
               <KPICard
-                title="Consumo Médio"
-                value={`${overview.average_consumo_kwh?.toFixed(2)} kWh`}
+                title="Séries Consolidadas"
+                value={overview.series_consolidated}
                 icon={TrendingUp}
                 color="green"
               />
               <KPICard
-                title="Taxa de Tolerância"
-                value={`${overview.tolerance_rate?.toFixed(1)}%`}
+                title="Anomalias Detectadas"
+                value={overview.anomalies_detected}
                 icon={AlertTriangle}
                 color="orange"
               />
@@ -151,15 +154,19 @@ function Dashboard() {
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <TimelineChart
-                data={timeline}
-                title="Consumo Médio por Mês"
-                dataKey="average_consumo_kwh"
+                data={chartData}
+                title="Tendência de Indicadores"
+                dataKey={Object.keys(chartData[0] || {}).find((key) => key !== 'year') || 'value'}
+                xDataKey="year"
                 color="#3b82f6"
               />
-              <MachineDistributionChart
-                data={machineDistribution}
-                title="Distribuição por Máquina"
-              />
+              <div className="chart-container">
+                <h3 className="text-lg font-semibold mb-4 text-white">Resumo Analítico</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Este dashboard consolida o catálogo de documentos, indicadores e séries históricas
+                  alinhados ao modelo de governança de dados da Eletrobras.
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -169,20 +176,20 @@ function Dashboard() {
             {/* Anomalies KPIs */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <KPICard
-                title="Total de Previsões"
-                value={overview?.prediction_count || 0}
+                title="Execuções de Ingestão"
+                value={overview?.ingestion_runs || 0}
                 icon={BarChart3}
                 color="blue"
               />
               <KPICard
                 title="Anomalias Detectadas"
-                value={overview?.total_anomaly_predictions || 0}
+                value={overview?.anomalies_detected || 0}
                 icon={AlertTriangle}
                 color="red"
               />
               <KPICard
-                title="Taxa de Anomalia"
-                value={`${overview?.anomaly_rate?.toFixed(1) || 0}%`}
+                title="Séries Consolidadas"
+                value={overview?.series_consolidated || 0}
                 icon={TrendingUp}
                 color="orange"
               />
@@ -197,16 +204,11 @@ function Dashboard() {
           <div className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <TimelineChart
-                data={timeline}
-                title="Consumo Médio Mensal"
-                dataKey="average_consumo_kwh"
+                data={chartData}
+                title="Tendência de Série Histórica"
+                dataKey={Object.keys(chartData[0] || {}).find((key) => key !== 'year') || 'value'}
+                xDataKey="year"
                 color="#10b981"
-              />
-              <TimelineChart
-                data={timeline}
-                title="Produção Média Mensal"
-                dataKey="average_producao_hora"
-                color="#8b5cf6"
               />
             </div>
           </div>

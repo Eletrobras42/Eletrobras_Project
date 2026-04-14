@@ -79,7 +79,7 @@ echo 🎉 Setup concluído com sucesso!
 echo.
 echo 📊 Para iniciar os serviços, execute:
 echo    • Backend: cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-echo    • Frontend: cd frontend && npm run dev
+echo    • Frontend: cd frontend && npm start
 echo.
 echo 💡 Ou use o script PowerShell: .\setup.ps1 (se a política de execução permitir)
 echo.

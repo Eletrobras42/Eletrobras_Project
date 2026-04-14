@@ -1,33 +1,27 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: 'http://127.0.0.1:8000',
   timeout: 10000,
 });
 
 export async function getDashboardOverview() {
-  const response = await api.get('/overview');
+  const response = await api.get('/dashboard/kpis');
   return response.data;
 }
 
-export async function getTimelineData() {
-  const response = await api.get('/timeline');
+export async function getDashboardTrends() {
+  const response = await api.get('/dashboard/trends');
   return response.data;
 }
 
-export async function getMachineAnalytics(machine) {
-  const response = await api.get(`/analytics?machine=${machine}`);
+export async function getDashboardAnomalies() {
+  const response = await api.get('/dashboard/anomalies');
   return response.data;
 }
 
-export async function getPredictions(machine = null) {
-  const url = machine ? `/predictions?machine=${machine}` : '/predictions';
-  const response = await api.get(url);
-  return response.data;
-}
-
-export async function getMachines() {
-  const response = await api.get('/machines');
+export async function getSources() {
+  const response = await api.get('/sources');
   return response.data;
 }
 

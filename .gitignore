@@ -3,6 +3,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.python-version
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
 .Python
 build/
 develop-eggs/
@@ -23,7 +32,10 @@ MANIFEST
 
 # Virtual environments
 .env
+.env.*
+!.env.example
 .venv
+.venv/
 env/
 venv/
 ENV/
@@ -32,7 +44,9 @@ venv.bak/
 
 # Node.js
 node_modules/
+.npm/
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
@@ -40,6 +54,9 @@ lerna-debug.log*
 # React
 build/
 dist/
+coverage/
+.eslintcache
+*.tsbuildinfo
 
 # SQLite database
 *.db
@@ -64,12 +81,27 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+.cache/
 
 
 # README
 README.md
+dashboard_design.md
+dashboard_spec.md
+api-contract.md
+architecture.md
+dashboard-visual-guidelines.md
+data-governance.md
+source-catalog.md
+sqlite-schema.md
 
 #Image files
 *.png
 *.jpg
 *.jpeg
+
+# scripts 
+*.sh
+*.ps1
+*.bat
+seed_source_catalog.py

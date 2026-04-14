@@ -1,74 +1,71 @@
-# Eletrobras_Project
-Projeto de monitoramento preditivo de consumo energético com backend em FastAPI e frontend em React + Vite.
-
-## Repositório GitHub
-- https://github.com/Eletrobras42/Eletrobras_Project
+# Eletrobras Predictive Monitoring
+Plataforma de monitoramento preditivo de consumo energético baseada em documentos públicos da Eletrobras.
 
 ## Visão geral
-Este projeto contém:
-- `backend/` — API FastAPI com endpoints de previsão, analytics e exportação.
-- `frontend/` — Aplicação React usando Vite para exibir dashboards e formulários.
-- `data/` — Base histórica de consumo para carga inicial.
-- `setup.bat` / `start_services.bat` — scripts para iniciar o ambiente local no Windows.
+Este monorepo segue o Manual Mestre do projeto:
+- `backend/` — API FastAPI com modelagem SQLite, ingestão documental, catalogação de fontes, interpolação e detecção de anomalias.
+- `frontend/` — Dashboard React com bundler Webpack, interface dark premium e visual executivo.
+- `docs/` — documentação técnica de arquitetura, governança e APIs.
+- `scripts/` — comandos de execução e inicialização do ambiente.
 
-## Publicação no GitHub
-O repositório já está configurado e publicado no GitHub correto.
-A branch `main` está rastreando `origin/main`.
+## Fonte oficial dos dados
+O sistema foi projetado para usar como fonte primária os documentos públicos listados na página de Relatório Anual da Eletrobras.
+A ideia é catalogar cada documento por ano, tipo, URL de origem e manter rastreabilidade total.
 
-### Como enviar mudanças
-```powershell
-cd C:\Users\Nitro\Downloads\Eletrobras_Project
-git add .
-git commit -m "Mensagem do commit"
-git push
-```
+## Stack
+### Backend
+- FastAPI
+- Uvicorn
+- Pandas
+- SciPy
+- scikit-learn
+- SQLAlchemy
+- Pydantic
+- NumPy
+- python-dotenv
+- typing-extensions
 
-## Executando localmente
+### Frontend
+- React
+- Webpack
+
+### Banco
+- SQLite
+
+## Execução local
 ### Backend
 ```powershell
 cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### Frontend
-```cmd
+```powershell
 cd frontend
 npm install
-npm run dev
+npm start
 ```
 
-### Acessar
-- Frontend: `http://localhost:3000`
-- Backend Swagger: `http://localhost:8000/docs`
+## Endpoints principais
+- `GET /health`
+- `GET /sources`
+- `POST /sources/seed`
+- `POST /ingestion/run`
+- `GET /indicators`
+- `GET /indicators/series`
+- `GET /dashboard/kpis`
+- `GET /dashboard/trends`
+- `GET /dashboard/anomalies`
+- `POST /predictions/interpolate`
 
-## Build de produção
-### Frontend
-```cmd
-cd frontend
-npm run build
-```
+## Estrutura do monorepo
+- `backend/`
+- `frontend/`
+- `docs/`
+- `scripts/`
 
-### Backend
-```powershell
-cd backend
-python -m compileall app
-```
-
-## CI/CD
-Há um workflow do GitHub Actions em `.github/workflows/ci.yml` que:
-- instala dependências Python e Node
-- valida a sintaxe do backend
-- gera o build do frontend
-
-## Observações de ambiente Windows
-Se o PowerShell bloquear `npm.ps1`, use:
-```powershell
-cmd /c "npm install"
-cmd /c "npm run build"
-```
-
-Se o Windows bloquear DLLs do NumPy, pode ser necessário ajustar a política de execução ou usar um ambiente virtual limpo.
+## Documentação adicional
+Veja `docs/architecture.md`, `docs/source-catalog.md`, `docs/sqlite-schema.md` e `docs/api-contract.md`.

@@ -6,3 +6,5 @@ scikit-learn
 sqlalchemy
 pydantic
 numpy
+python-dotenv
+typing-extensions

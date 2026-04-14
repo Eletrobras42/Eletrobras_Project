@@ -54,7 +54,7 @@ start "Backend Server" cmd /k cd /d "%ROOT_DIR%backend" ^&^& uvicorn app.main:ap
 timeout /t 3 /nobreak >nul
 
 echo 🎨 Frontend (React) iniciando na porta 3000...
-start "Frontend Server" cmd /k cd /d "%ROOT_DIR%frontend" ^&^& npm run dev
+start "Frontend Server" cmd /k cd /d "%ROOT_DIR%frontend" ^&^& npm start
 
 echo.
 echo ========================================

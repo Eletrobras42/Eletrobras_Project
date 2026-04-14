@@ -9,7 +9,7 @@ start "Backend - Eletrobras API" cmd /k "cd backend && uvicorn app.main:app --re
 timeout /t 3 /nobreak >nul
 
 echo 🌐 Iniciando frontend React na porta 3000...
-start "Frontend - Eletrobras Web" cmd /k "cd frontend && npm run dev"
+start "Frontend - Eletrobras Web" cmd /k "cd frontend && npm start"
 
 echo.
 echo 🎉 Serviços iniciados!

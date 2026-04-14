@@ -1,36 +1,45 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes.predict import router as predict_router
-from app.routes.analytics import router as analytics_router
-from app.routes.dashboard import router as dashboard_router
-from app.routes.export import router as export_router
-from app.database.connection import init_db
-from app.database.seed import seed_initial_data
+
+from app.core.config import APP_NAME, ALLOWED_ORIGINS
+from app.core.database import init_db
+from app.services.catalog_service import CatalogService
+from app.api.routes.health import router as health_router
+from app.api.routes.sources import router as sources_router
+from app.api.routes.ingestion import router as ingestion_router
+from app.api.routes.indicators import router as indicators_router
+from app.api.routes.dashboard import router as dashboard_router
+from app.api.routes.anomalies import router as anomalies_router
+from app.api.routes.predictions import router as predictions_router
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    init_db()
+    CatalogService.seed_default_sources()
+    yield
 
 app = FastAPI(
-    title="Eletrobras Predictive Monitoring API",
-    description="API de ingestão e previsão de consumo energético para Eletrobras usando interpolação e análise de dados históricos.",
+    title=APP_NAME,
+    description="API de ingestão documental, catalogação e dashboard analítico do Eletrobras Predictive Monitoring.",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS or ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-def on_startup():
-    init_db()
-    seed_initial_data()
-
-app.include_router(predict_router, prefix="/api")
-app.include_router(analytics_router, prefix="/api")
-app.include_router(dashboard_router, prefix="/api")
-app.include_router(export_router, prefix="/api")
-
-@app.get("/health")
-def health():
-    return {"status": "ok", "service": "eletrobras-predictive-monitoring"}
+app.include_router(health_router)
+app.include_router(sources_router)
+app.include_router(ingestion_router)
+app.include_router(indicators_router)
+app.include_router(dashboard_router)
+app.include_router(anomalies_router)
+app.include_router(predictions_router)
