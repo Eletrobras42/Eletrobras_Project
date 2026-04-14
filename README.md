@@ -58,6 +58,3 @@ npm start
 - `frontend/`
 - `docs/`
 - `scripts/`
-
-## Documentação adicional
-Veja `docs/architecture.md`, `docs/source-catalog.md`, `docs/sqlite-schema.md` e `docs/api-contract.md`.
